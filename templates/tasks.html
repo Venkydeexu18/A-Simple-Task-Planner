@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Assignment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 55%;
+            max-width: 1200px;
+        }
+
+        .left-container, .right-container {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .left-container {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+        }
+
+        .right-container {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .glass-effect h2 {
+            color: #333;
+        }
+
+        .menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .menu a {
+            color: #333;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .menu a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="/">Home</a>
+    </div>
+    <div class="container">
+        <div class="left-container">
+            <div class="glass-effect">
+                <h2>Tasks for:</h2>
+                <form action="/tasks" method="POST">
+                    <label for="assigned_date">Select Date:</label>
+                    <input type="date" id="assigned_date" name="assigned_date" required>
+                    <button type="submit">Submit</button>
+                </form>
+
+                <div id="assigned_tasks">
+                    <h3>Tasks for {{ assigned_date }}</h3>
+                    <ul>
+                        {% if assigned_tasks %}
+                            {% for task in assigned_tasks %}
+                                <li>{{ task.topics }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li>No tasks for this date.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="right-container">
+            <div class="glass-effect">
+                <h2>Complete Tasks:</h2>
+                <form action="/complete_task" method="POST">
+                    <label for="completion_date">Date:</label>
+                    <input type="date" id="completion_date" name="completion_date" required><br><br>
+                    <label for="topic">Topic:</label>
+                    <input type="text" id="topic" name="topics" required><br><br>
+                    <button type="submit">Submit</button>
+                </form>
+
+                <div id="progress">
+                    <h3>Progress</h3>
+                    <ul>
+                        <h4>Pending Tasks:</h4>
+                        {% if assigned_tasks %}
+                            {% for task in assigned_tasks %}
+                                {% if task not in completed_tasks %}
+                                    <li>{{ task.topics }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <li>No pending tasks for this date.</li>
+                        {% endif %}
+                        <hr>
+                        <h4>Completed Tasks:</h4>
+                        {% if completed_tasks %}
+                            {% for task in completed_tasks %}
+                                <li style="text-decoration: line-through;">{{ task.topic }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li>No completed tasks for this date.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
